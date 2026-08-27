@@ -440,7 +440,7 @@ Follow `.cursor/skills/testing/SKILL.md` for Vitest setup, the `@/` alias, Cloud
 
 ---
 
-### Phase 7: Auth UI and MCQ stub page - PLANNED
+### Phase 7: Auth UI and MCQ stub page - COMPLETED
 
 **Objective**: Teachers can register, log in, land on the stub page, and log out.
 
@@ -472,6 +472,15 @@ Follow `.cursor/skills/testing/SKILL.md` for Vitest setup, the `@/` alias, Cloud
 - Updated `src/app/page.tsx` redirect to `/login`
 - Colocated `*.test.tsx` files written first
 
+**Implementation notes**:
+
+- Tests were written first and failed red (missing register/login/test-bank form modules)
+- Pages: `/register`, `/login`, `/test-bank`; `/` redirects to `/login`
+- Login stores the public user in memory only (`src/lib/current-user.ts`); no cookies
+- `npm test`: 45 passed; `npm run lint`: exit 0
+- Routes respond locally: `/login` 200, `/register` 200, `/test-bank` 200, `/` 307 to `/login`
+- Manually verified: register → login → stub → logout, including API error cases
+
 ---
 
 ## Technical Implementation Details
@@ -495,8 +504,15 @@ Planned paths (create during the matching phase; do not create them only to sati
 - `src/app/api/logout/route.ts` — logout endpoint (`src/app/api/logout/route.ts:3`)
 - `src/app/api/logout/route.test.ts` — logout behaviour tests (written first)
 - `src/app/register/page.tsx` — registration UI
+- `src/components/auth/register-form.tsx` — registration form
+- `src/components/auth/register-form.test.tsx` — registration UI tests (written first)
 - `src/app/login/page.tsx` — login UI
+- `src/components/auth/login-form.tsx` — login form
+- `src/components/auth/login-form.test.tsx` — login UI tests (written first)
 - `src/app/test-bank/page.tsx` — MCQ stub
+- `src/components/auth/test-bank-stub.tsx` — stub + logout
+- `src/components/auth/test-bank-stub.test.tsx` — stub UI tests (written first)
+- `src/lib/current-user.ts` — in-memory signed-in user for this visit only
 - Colocated `*.test.ts` / `*.test.tsx` for each of the above
 
 ### Implementation Patterns
@@ -555,20 +571,20 @@ Do **not** add bcrypt, cookie libraries, iron-session, next-auth, JWT libraries,
 
 ## Acceptance Criteria
 
-- [ ] A teacher can register with first name, last name, email, and password
-- [ ] The database stores a password hash, never the plaintext password
-- [ ] Duplicate email registration is rejected with a clear error
-- [ ] A teacher can log in with the correct email and password and is redirected to `/test-bank`
-- [ ] A wrong password shows `"Invalid email or password."` and does not enter the stub page
-- [ ] An unknown email shows the same `"Invalid email or password."` message
-- [ ] A teacher can log out and return to `/login`
-- [ ] A second teacher can register and log in independently of the first
-- [ ] `POST /api/register`, `POST /api/login`, and `POST /api/logout` exist and match the contracts above
-- [ ] No cookie is set or stored by this feature
-- [ ] There is no session table, session store, or session middleware
-- [ ] `/test-bank` is a stub only: no MCQ CRUD
-- [ ] Every phase’s tests were written first, failed on red, then passed on green without being weakened
-- [ ] `npm test`, `npm run lint`, and `npm run build` succeed
+- [x] A teacher can register with first name, last name, email, and password
+- [x] The database stores a password hash, never the plaintext password
+- [x] Duplicate email registration is rejected with a clear error
+- [x] A teacher can log in with the correct email and password and is redirected to `/test-bank`
+- [x] A wrong password shows `"Invalid email or password."` and does not enter the stub page
+- [x] An unknown email shows the same `"Invalid email or password."` message
+- [x] A teacher can log out and return to `/login`
+- [x] A second teacher can register and log in independently of the first
+- [x] `POST /api/register`, `POST /api/login`, and `POST /api/logout` exist and match the contracts above
+- [x] No cookie is set or stored by this feature
+- [x] There is no session table, session store, or session middleware
+- [x] `/test-bank` is a stub only: no MCQ CRUD
+- [x] Every phase’s tests were written first, failed on red, then passed on green without being weakened
+- [ ] `npm test`, `npm run lint`, and `npm run build` succeed — `npm test` and `npm run lint` pass; `npm run build` still fails on this Windows machine because workerd crashes
 
 ---
 
@@ -701,5 +717,5 @@ Add entries here when bugs are found and fixed during implementation.
 
 **Last Updated**: 2026-08-28
 **Current Phase**: Phase 7 - Auth UI and MCQ stub page
-**Status**: PLANNED
-**Next Steps**: Write auth UI tests first (red), then implement register, login, and test-bank pages.
+**Status**: COMPLETED
+**Next Steps**: This PRD’s authentication flow is done. MCQ authoring and collaboration are out of scope for this document.

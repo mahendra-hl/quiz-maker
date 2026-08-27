@@ -377,7 +377,7 @@ Follow `.cursor/skills/testing/SKILL.md` for Vitest setup, the `@/` alias, Cloud
 
 ---
 
-### Phase 5: Login endpoint - PLANNED
+### Phase 5: Login endpoint - COMPLETED
 
 **Objective**: `POST /api/login` authenticates by email and hash comparison.
 
@@ -401,6 +401,13 @@ Follow `.cursor/skills/testing/SKILL.md` for Vitest setup, the `@/` alias, Cloud
 
 - `src/app/api/login/route.ts`
 - `src/app/api/login/route.test.ts` (written first)
+
+**Implementation notes**:
+
+- Tests were written first and failed red (`Failed to resolve import "@/app/api/login/route"`)
+- `POST /api/login` finds by email, verifies the hash, returns 200 or the same 401 message for unknown email and wrong password
+- Success response is public user fields only and does not set cookies (`src/app/api/login/route.ts:53`)
+- `npm test`: 31 passed; `npm run lint`: exit 0
 
 ---
 
@@ -477,7 +484,8 @@ Planned paths (create during the matching phase; do not create them only to sati
 - `src/lib/services/user.test.ts` — user service behaviour tests (written first)
 - `src/app/api/register/route.ts` — registration endpoint (`src/app/api/register/route.ts:30`)
 - `src/app/api/register/route.test.ts` — registration behaviour tests (written first)
-- `src/app/api/login/route.ts` — login endpoint
+- `src/app/api/login/route.ts` — login endpoint (`src/app/api/login/route.ts:27`)
+- `src/app/api/login/route.test.ts` — login behaviour tests (written first)
 - `src/app/api/logout/route.ts` — logout endpoint
 - `src/app/register/page.tsx` — registration UI
 - `src/app/login/page.tsx` — login UI
@@ -685,6 +693,6 @@ Add entries here when bugs are found and fixed during implementation.
 ## Current Status
 
 **Last Updated**: 2026-08-28
-**Current Phase**: Phase 5 - Login endpoint
+**Current Phase**: Phase 6 - Logout endpoint
 **Status**: PLANNED
-**Next Steps**: Write login endpoint tests first (red), then implement `POST /api/login`.
+**Next Steps**: Write logout endpoint tests first (red), then implement `POST /api/logout`.

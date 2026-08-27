@@ -411,7 +411,7 @@ Follow `.cursor/skills/testing/SKILL.md` for Vitest setup, the `@/` alias, Cloud
 
 ---
 
-### Phase 6: Logout endpoint - PLANNED
+### Phase 6: Logout endpoint - COMPLETED
 
 **Objective**: `POST /api/logout` lets the teacher leave the app without cookies or sessions.
 
@@ -431,6 +431,12 @@ Follow `.cursor/skills/testing/SKILL.md` for Vitest setup, the `@/` alias, Cloud
 
 - `src/app/api/logout/route.ts`
 - `src/app/api/logout/route.test.ts` (written first)
+
+**Implementation notes**:
+
+- Tests were written first and failed red (`Failed to resolve import "@/app/api/logout/route"`)
+- `POST /api/logout` returns `{ ok: true }` and does not read or set cookies (`src/app/api/logout/route.ts:3`)
+- `npm test`: 34 passed; `npm run lint`: unused-arg warning fixed
 
 ---
 
@@ -486,7 +492,8 @@ Planned paths (create during the matching phase; do not create them only to sati
 - `src/app/api/register/route.test.ts` — registration behaviour tests (written first)
 - `src/app/api/login/route.ts` — login endpoint (`src/app/api/login/route.ts:27`)
 - `src/app/api/login/route.test.ts` — login behaviour tests (written first)
-- `src/app/api/logout/route.ts` — logout endpoint
+- `src/app/api/logout/route.ts` — logout endpoint (`src/app/api/logout/route.ts:3`)
+- `src/app/api/logout/route.test.ts` — logout behaviour tests (written first)
 - `src/app/register/page.tsx` — registration UI
 - `src/app/login/page.tsx` — login UI
 - `src/app/test-bank/page.tsx` — MCQ stub
@@ -693,6 +700,6 @@ Add entries here when bugs are found and fixed during implementation.
 ## Current Status
 
 **Last Updated**: 2026-08-28
-**Current Phase**: Phase 6 - Logout endpoint
+**Current Phase**: Phase 7 - Auth UI and MCQ stub page
 **Status**: PLANNED
-**Next Steps**: Write logout endpoint tests first (red), then implement `POST /api/logout`.
+**Next Steps**: Write auth UI tests first (red), then implement register, login, and test-bank pages.

@@ -342,7 +342,7 @@ Follow `.cursor/skills/testing/SKILL.md` for Vitest setup, the `@/` alias, Cloud
 
 ---
 
-### Phase 4: Registration endpoint - PLANNED
+### Phase 4: Registration endpoint - COMPLETED
 
 **Objective**: `POST /api/register` creates a teacher and never persists plaintext passwords.
 
@@ -366,6 +366,14 @@ Follow `.cursor/skills/testing/SKILL.md` for Vitest setup, the `@/` alias, Cloud
 
 - `src/app/api/register/route.ts`
 - `src/app/api/register/route.test.ts` (written first)
+
+**Implementation notes**:
+
+- Tests were written first and failed red (`Failed to resolve import "@/app/api/register/route"`)
+- `POST /api/register` validates with Zod, calls `createUser`, returns 201/400/409
+- Response user object is public fields only; no cookies (`src/app/api/register/route.ts:30`)
+- Development 500s now include the real D1/workerd error (`src/app/api/register/route.ts:58`)
+- `npm test`: 24 passed; `npm run lint`: exit 0
 
 ---
 
@@ -467,7 +475,8 @@ Planned paths (create during the matching phase; do not create them only to sati
 - `src/lib/db.ts` — D1 access via `getCloudflareContext()` (`src/lib/db.ts:7`)
 - `src/lib/services/user.ts` — create, update, delete, find by email (`src/lib/services/user.ts:119`)
 - `src/lib/services/user.test.ts` — user service behaviour tests (written first)
-- `src/app/api/register/route.ts` — registration endpoint
+- `src/app/api/register/route.ts` — registration endpoint (`src/app/api/register/route.ts:30`)
+- `src/app/api/register/route.test.ts` — registration behaviour tests (written first)
 - `src/app/api/login/route.ts` — login endpoint
 - `src/app/api/logout/route.ts` — logout endpoint
 - `src/app/register/page.tsx` — registration UI
@@ -642,6 +651,12 @@ Add entries here when bugs are found and fixed during implementation.
 **Cause**: Local Workers runtime (`workerd`) crash on this Windows machine, not the Vitest harness. Pre-existing environment issue.
 **Solution**: Update the Microsoft Visual C++ Redistributable if needed. Re-run `npm run build` locally. This is not a Phase 1 code defect.
 
+### `POST /api/register` returns 500 in `next dev`
+**Problem**: curl to `/api/register` returns 500 even with a valid JSON body.
+**Cause**: `initOpenNextCloudflareForDev()` starts Miniflare/workerd so `getCloudflareContext()` can read `env.DB`. On this Windows machine workerd crashes (`ERR_RUNTIME_FAILURE` / `#0xc0000005`), so D1 is missing. Unit tests still pass because they mock D1.
+**Solution**: Update the Microsoft Visual C++ Redistributable, restart `npm run dev`, then apply the local migration (`npx wrangler d1 migrations apply quiz-maker-db --local`). Until workerd starts, this endpoint cannot persist users. In development the 500 body now includes the real error message.
+**Code Reference**: `src/lib/db.ts:7`, `src/app/api/register/route.ts:58`
+
 ### Local D1 migrate / `cf-typegen` fail on Windows
 **Problem**: `npx wrangler d1 migrations apply quiz-maker-db --local` and `npm run cf-typegen` crash with the same `workerd` access violation.
 **Cause**: Wrangler starts the Workers runtime for those commands.
@@ -669,7 +684,7 @@ Add entries here when bugs are found and fixed during implementation.
 
 ## Current Status
 
-**Last Updated**: 2026-08-27
-**Current Phase**: Phase 4 - Registration endpoint
+**Last Updated**: 2026-08-28
+**Current Phase**: Phase 5 - Login endpoint
 **Status**: PLANNED
-**Next Steps**: Write registration endpoint tests first (red), then implement `POST /api/register`.
+**Next Steps**: Write login endpoint tests first (red), then implement `POST /api/login`.

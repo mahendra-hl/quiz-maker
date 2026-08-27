@@ -259,7 +259,7 @@ Follow `.cursor/skills/testing/SKILL.md` for Vitest setup, the `@/` alias, Cloud
 
 ---
 
-### Phase 2: Password hashing - PLANNED
+### Phase 2: Password hashing - COMPLETED
 
 **Objective**: Passwords can be hashed and verified without storing plaintext.
 
@@ -282,6 +282,14 @@ Follow `.cursor/skills/testing/SKILL.md` for Vitest setup, the `@/` alias, Cloud
 
 - `src/lib/password.ts`
 - `src/lib/password.test.ts` (written first)
+
+**Implementation notes**:
+
+- Tests were written first and failed red (`Failed to resolve import "@/lib/password"`)
+- Implementation uses Web Crypto PBKDF2-SHA-256, 100000 iterations, 16-byte salt, 32-byte key
+- Stored format: `pbkdf2-sha256$100000$<salt-hex>$<hash-hex>` (`src/lib/password.ts:70`)
+- Verify uses a timing-safe compare and returns false for malformed hashes (`src/lib/password.ts:76`)
+- `npm test`: 6 passed; `npm run lint`: exit 0
 
 ---
 
@@ -444,7 +452,8 @@ Planned paths (create during the matching phase; do not create them only to sati
 - `vitest.config.ts` — Vitest runner (`vitest.config.ts:1`)
 - `migrations/` — D1 `users` table migration
 - `wrangler.jsonc` — `d1_databases` binding `DB`
-- `src/lib/password.ts` — PBKDF2 hash and verify
+- `src/lib/password.ts` — PBKDF2 hash and verify (`src/lib/password.ts:70`, `src/lib/password.ts:76`)
+- `src/lib/password.test.ts` — hashing behaviour tests (written first)
 - `src/lib/db.ts` — D1 access via `getCloudflareContext()`
 - `src/lib/services/user.ts` — create, update, delete, find by email
 - `src/app/api/register/route.ts` — registration endpoint
@@ -644,6 +653,6 @@ Add entries here when bugs are found and fixed during implementation.
 ## Current Status
 
 **Last Updated**: 2026-08-27
-**Current Phase**: Phase 2 - Password hashing
+**Current Phase**: Phase 3 - D1, users migration, and user service
 **Status**: PLANNED
-**Next Steps**: Write password hashing tests first (red), then implement Web Crypto PBKDF2.
+**Next Steps**: Write user service tests first (red), add D1 + zod, then implement the service.

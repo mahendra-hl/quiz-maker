@@ -293,7 +293,7 @@ Follow `.cursor/skills/testing/SKILL.md` for Vitest setup, the `@/` alias, Cloud
 
 ---
 
-### Phase 3: D1, users migration, and user service - PLANNED
+### Phase 3: D1, users migration, and user service - COMPLETED
 
 **Objective**: Teachers can be created, updated, and deleted in D1; passwords are hashed before insert.
 
@@ -329,6 +329,16 @@ Follow `.cursor/skills/testing/SKILL.md` for Vitest setup, the `@/` alias, Cloud
 - `src/lib/services/user.ts`
 - `src/lib/services/user.test.ts` (written first)
 - Mock of `@opennextjs/cloudflare` / D1 per the testing skill
+
+**Implementation notes**:
+
+- Tests were written first and failed red (`Failed to resolve import "@/lib/services/user"`)
+- Installed `zod` for service input validation
+- Created remote D1 database `quiz-maker-db` (`60e8778b-4c5b-4312-a60b-31665f1f8708`) and bound it as `DB` in `wrangler.jsonc`
+- Migration `migrations/0001_create-users.sql` defines `users` and unique email index
+- `npx wrangler d1 migrations apply quiz-maker-db --local` and `npm run cf-typegen` failed on this Windows machine with the same `workerd` access violation as `npm run build`. The migration file is in the repo; local apply and generated `DB` types still need a working Workers runtime. `src/lib/db.ts` casts `env.DB` until `cf-typegen` can run.
+- User service hashes passwords via `hashPassword` before insert/update (`src/lib/services/user.ts:119`, `src/lib/services/user.ts:155`)
+- `npm test`: 17 passed; `npm run lint`: exit 0
 
 ---
 
@@ -450,12 +460,13 @@ Follow `.cursor/skills/testing/SKILL.md` for Vitest setup, the `@/` alias, Cloud
 Planned paths (create during the matching phase; do not create them only to satisfy this list):
 
 - `vitest.config.ts` — Vitest runner (`vitest.config.ts:1`)
-- `migrations/` — D1 `users` table migration
-- `wrangler.jsonc` — `d1_databases` binding `DB`
+- `migrations/0001_create-users.sql` — D1 `users` table migration
+- `wrangler.jsonc` — `d1_databases` binding `DB` (`quiz-maker-db`)
 - `src/lib/password.ts` — PBKDF2 hash and verify (`src/lib/password.ts:70`, `src/lib/password.ts:76`)
 - `src/lib/password.test.ts` — hashing behaviour tests (written first)
-- `src/lib/db.ts` — D1 access via `getCloudflareContext()`
-- `src/lib/services/user.ts` — create, update, delete, find by email
+- `src/lib/db.ts` — D1 access via `getCloudflareContext()` (`src/lib/db.ts:7`)
+- `src/lib/services/user.ts` — create, update, delete, find by email (`src/lib/services/user.ts:119`)
+- `src/lib/services/user.test.ts` — user service behaviour tests (written first)
 - `src/app/api/register/route.ts` — registration endpoint
 - `src/app/api/login/route.ts` — login endpoint
 - `src/app/api/logout/route.ts` — logout endpoint
@@ -501,7 +512,7 @@ Ask before installing. Do not add anything else for this phase.
 | Package | Why |
 |---|---|
 | `vitest`, `@vitejs/plugin-react@5.1.4`, `@testing-library/react`, `@testing-library/user-event`, `jsdom`, `vite-tsconfig-paths` | TDD harness — installed in Phase 1 |
-| `zod` | Validate register/login bodies and user-service input — not installed yet |
+| `zod` | Validate register/login bodies and user-service input — installed in Phase 3 |
 
 Do **not** add bcrypt, cookie libraries, iron-session, next-auth, JWT libraries, or form libraries.
 
@@ -631,6 +642,12 @@ Add entries here when bugs are found and fixed during implementation.
 **Cause**: Local Workers runtime (`workerd`) crash on this Windows machine, not the Vitest harness. Pre-existing environment issue.
 **Solution**: Update the Microsoft Visual C++ Redistributable if needed. Re-run `npm run build` locally. This is not a Phase 1 code defect.
 
+### Local D1 migrate / `cf-typegen` fail on Windows
+**Problem**: `npx wrangler d1 migrations apply quiz-maker-db --local` and `npm run cf-typegen` crash with the same `workerd` access violation.
+**Cause**: Wrangler starts the Workers runtime for those commands.
+**Solution**: Re-run both commands after the VC++ Redistributable / workerd issue is fixed. Do not apply migrations with `--remote`. Until `cf-typegen` succeeds, `src/lib/db.ts` casts `env` to read `DB`.
+**Code Reference**: `src/lib/db.ts:7`
+
 ---
 
 ## Notes for AI Agents
@@ -653,6 +670,6 @@ Add entries here when bugs are found and fixed during implementation.
 ## Current Status
 
 **Last Updated**: 2026-08-27
-**Current Phase**: Phase 3 - D1, users migration, and user service
+**Current Phase**: Phase 4 - Registration endpoint
 **Status**: PLANNED
-**Next Steps**: Write user service tests first (red), add D1 + zod, then implement the service.
+**Next Steps**: Write registration endpoint tests first (red), then implement `POST /api/register`.

@@ -4,7 +4,7 @@
  */
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "aisprints-starter",
+	"name": "quiz-maker",
 	"main": ".open-next/worker.js",
 	"compatibility_date": "2026-07-01",
 	"compatibility_flags": [
@@ -17,7 +17,15 @@
 	},
 	"observability": {
 		"enabled": true
-	}
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "quiz-maker-db",
+			"database_id": "60e8778b-4c5b-4312-a60b-31665f1f8708",
+			"migrations_dir": "migrations"
+		}
+	]
 	/**
 	 * Smart Placement
 	 * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement

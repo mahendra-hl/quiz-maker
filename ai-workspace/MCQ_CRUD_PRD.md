@@ -605,7 +605,7 @@ The Vitest harness already exists from the login sprint. Do not reinstall it.
 
 ---
 
-### Phase 7: Create and edit page - PLANNED
+### Phase 7: Create and edit page - COMPLETED
 
 **Objective**: Teachers can create and edit a question with two to six choices.
 
@@ -636,6 +636,15 @@ The Vitest harness already exists from the login sprint. Do not reinstall it.
 - `src/app/test-bank/questions/[id]/edit/page.tsx`
 - `src/components/questions/question-form.tsx`
 - Colocated `*.test.tsx` written first
+
+**Implementation notes**:
+
+- Tests were written first and failed red (`Failed to resolve import "@/app/test-bank/questions/new/page"`)
+- Added `@shadcn/textarea` and `@shadcn/radio-group`, importing `cn` from `@/lib/utils` (not the `cn` npm package)
+- Shared form starts with two choices, adds up to six, and removes only when more than two remain (`src/components/questions/question-form.tsx:94`)
+- Create uses `POST /api/questions`; edit loads `GET /api/questions/[id]` then `PUT` (`src/components/questions/question-form.tsx:132`)
+- Unknown edit id shows `"Question not found."`
+- `npm test`: 115 passed; `npm run lint`: exit 0; `npm run build`: succeeded (`/test-bank/questions/new` and `/test-bank/questions/[id]/edit`)
 
 ---
 
@@ -686,7 +695,7 @@ Planned paths (create during the matching phase; do not create them only to sati
 - `src/app/api/attempts/route.ts` — create and list attempts (`src/app/api/attempts/route.ts:50`)
 - Colocated `*.test.ts` for each route
 - `src/components/questions/question-table.tsx` — test-bank table and kebab menu (`src/components/questions/question-table.tsx:37`)
-- `src/components/questions/question-form.tsx` — create/edit form
+- `src/components/questions/question-form.tsx` — create/edit form (`src/components/questions/question-form.tsx:132`)
 - `src/components/questions/question-preview.tsx` — preview and feedback
 - `src/app/test-bank/page.tsx` — list page
 - `src/app/test-bank/questions/new/page.tsx` — create route
@@ -892,6 +901,6 @@ Add entries here when bugs are found and fixed during implementation.
 ## Current Status
 
 **Last Updated**: 2026-09-04
-**Current Phase**: Phase 6 - Test bank table UI
+**Current Phase**: Phase 7 - Create and edit page
 **Status**: COMPLETED (awaiting review)
-**Next Steps**: After review, commit/push/deploy Phase 6, then Phase 7 — create and edit page.
+**Next Steps**: After review, commit/push/deploy Phase 7, then Phase 8 — preview and attempt feedback.

@@ -446,7 +446,7 @@ The Vitest harness already exists from the login sprint. Do not reinstall it.
 
 ---
 
-### Phase 3: Attempt service - PLANNED
+### Phase 3: Attempt service - COMPLETED
 
 **Objective**: An attempt stores the selected choice and whether it was correct.
 
@@ -472,6 +472,13 @@ The Vitest harness already exists from the login sprint. Do not reinstall it.
 
 - `src/lib/services/attempt.ts`
 - `src/lib/services/attempt.test.ts` (written first)
+
+**Implementation notes**:
+
+- Tests were written first and failed red (`Failed to resolve import "@/lib/services/attempt"`)
+- `createAttempt` loads the choice, rejects a mismatch or missing question/choice, and stores `is_correct` from the choice row — never from the client (`src/lib/services/attempt.ts:111`)
+- `listAttemptsByQuestionId` returns newest first (`src/lib/services/attempt.ts:154`)
+- `npm test`: 70 passed; `npm run lint`: exit 0; `npm run build`: succeeded
 
 ---
 
@@ -645,8 +652,8 @@ Planned paths (create during the matching phase; do not create them only to sati
 - `migrations/0002_create-questions-choices-attempts.sql` — D1 `questions`, `choices`, and `attempts` tables
 - `src/lib/services/question.ts` — question and choice persistence (`src/lib/services/question.ts:176`)
 - `src/lib/services/question.test.ts` — written first (`src/lib/services/question.test.ts:226`)
-- `src/lib/services/attempt.ts` — attempt persistence
-- `src/lib/services/attempt.test.ts` — written first
+- `src/lib/services/attempt.ts` — attempt persistence (`src/lib/services/attempt.ts:111`)
+- `src/lib/services/attempt.test.ts` — written first (`src/lib/services/attempt.test.ts:214`)
 - `src/app/api/questions/route.ts` — list and create
 - `src/app/api/questions/[id]/route.ts` — get, update, delete
 - `src/app/api/questions/[id]/preview/route.ts` — preview without `isCorrect`
@@ -859,6 +866,6 @@ Add entries here when bugs are found and fixed during implementation.
 ## Current Status
 
 **Last Updated**: 2026-09-04
-**Current Phase**: Phase 2 - Question service
+**Current Phase**: Phase 3 - Attempt service
 **Status**: COMPLETED (awaiting review)
-**Next Steps**: After review, commit/push/deploy Phase 2, then Phase 3 — write failing attempt-service tests.
+**Next Steps**: After review, commit/push/deploy Phase 3, then Phase 4 — question APIs.

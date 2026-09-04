@@ -564,7 +564,7 @@ The Vitest harness already exists from the login sprint. Do not reinstall it.
 
 ---
 
-### Phase 6: Test bank table UI - PLANNED
+### Phase 6: Test bank table UI - COMPLETED
 
 **Objective**: `/test-bank` lists questions and exposes create, edit, delete, and preview.
 
@@ -593,6 +593,15 @@ The Vitest harness already exists from the login sprint. Do not reinstall it.
 - `src/components/questions/question-table.tsx` (or equivalent)
 - Colocated `*.test.tsx` written first
 - Existing stub tests updated only as needed so they still assert logout and the MCQ heading — do not drop those behaviours
+
+**Implementation notes**:
+
+- Tests were written first and failed red (`Failed to resolve import "@/components/questions/question-table"`)
+- Added `@shadcn/dropdown-menu`; its Base UI trigger did not open under jsdom, so the row menu is a three-dot button with `role="menu"` / `role="menuitem"` (`src/components/questions/question-table.tsx:37`)
+- `/test-bank` is a full-page layout: heading and Log out in the top-right header, table using the remaining width without an inner scrollbar (`src/app/test-bank/page.tsx:5`, `src/components/auth/test-bank-stub.tsx:27`)
+- The row actions menu is portaled to `document.body` so it is not clipped by the table (`src/components/questions/question-table.tsx:107`)
+- Delete confirms in a dialog, then `DELETE /api/questions/[id]` and the row is removed
+- `npm test`: 104 passed; `npm run lint`: exit 0; `npm run build`: succeeded (`/test-bank` remains; create/edit/preview routes are Phase 7–8)
 
 ---
 
@@ -676,7 +685,7 @@ Planned paths (create during the matching phase; do not create them only to sati
 - `src/app/api/questions/[id]/preview/route.ts` — preview without `isCorrect` (`src/app/api/questions/[id]/preview/route.ts:20`)
 - `src/app/api/attempts/route.ts` — create and list attempts (`src/app/api/attempts/route.ts:50`)
 - Colocated `*.test.ts` for each route
-- `src/components/questions/question-table.tsx` — test-bank table and kebab menu
+- `src/components/questions/question-table.tsx` — test-bank table and kebab menu (`src/components/questions/question-table.tsx:37`)
 - `src/components/questions/question-form.tsx` — create/edit form
 - `src/components/questions/question-preview.tsx` — preview and feedback
 - `src/app/test-bank/page.tsx` — list page
@@ -883,6 +892,6 @@ Add entries here when bugs are found and fixed during implementation.
 ## Current Status
 
 **Last Updated**: 2026-09-04
-**Current Phase**: Phase 5 - Attempt APIs
+**Current Phase**: Phase 6 - Test bank table UI
 **Status**: COMPLETED (awaiting review)
-**Next Steps**: After review, commit/push/deploy Phase 5, then Phase 6 — test bank table UI.
+**Next Steps**: After review, commit/push/deploy Phase 6, then Phase 7 — create and edit page.

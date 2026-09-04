@@ -402,7 +402,7 @@ The Vitest harness already exists from the login sprint. Do not reinstall it.
 
 ---
 
-### Phase 2: Question service - PLANNED
+### Phase 2: Question service - COMPLETED
 
 **Objective**: Questions and choices can be created, read, updated, and deleted in D1 with the validation rules above.
 
@@ -435,6 +435,14 @@ The Vitest harness already exists from the login sprint. Do not reinstall it.
 
 - `src/lib/services/question.ts`
 - `src/lib/services/question.test.ts` (written first)
+
+**Implementation notes**:
+
+- Tests were written first and failed red (`Failed to resolve import "@/lib/services/question"`)
+- Service validates with Zod: trimmed name/stem, 2–6 choices, exactly one correct (`src/lib/services/question.ts:64`)
+- D1 writes use numbered placeholders; `is_correct` is stored as 0/1 and exposed as boolean (`src/lib/services/question.ts:103`)
+- `updateQuestion` deletes attempts for the question, then replaces the choice set (`src/lib/services/question.ts:161`)
+- `npm test`: 61 passed; `npm run lint`: exit 0; `npm run build`: succeeded
 
 ---
 
@@ -635,8 +643,8 @@ The Vitest harness already exists from the login sprint. Do not reinstall it.
 Planned paths (create during the matching phase; do not create them only to satisfy this list):
 
 - `migrations/0002_create-questions-choices-attempts.sql` — D1 `questions`, `choices`, and `attempts` tables
-- `src/lib/services/question.ts` — question and choice persistence
-- `src/lib/services/question.test.ts` — written first
+- `src/lib/services/question.ts` — question and choice persistence (`src/lib/services/question.ts:176`)
+- `src/lib/services/question.test.ts` — written first (`src/lib/services/question.test.ts:226`)
 - `src/lib/services/attempt.ts` — attempt persistence
 - `src/lib/services/attempt.test.ts` — written first
 - `src/app/api/questions/route.ts` — list and create
@@ -851,6 +859,6 @@ Add entries here when bugs are found and fixed during implementation.
 ## Current Status
 
 **Last Updated**: 2026-09-04
-**Current Phase**: Phase 1 - Questions, choices, and attempts migration
+**Current Phase**: Phase 2 - Question service
 **Status**: COMPLETED (awaiting review)
-**Next Steps**: After review, Phase 2 — write failing question-service tests, then implement `src/lib/services/question.ts`.
+**Next Steps**: After review, commit/push/deploy Phase 2, then Phase 3 — write failing attempt-service tests.

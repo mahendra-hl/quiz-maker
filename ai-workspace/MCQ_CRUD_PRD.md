@@ -482,7 +482,7 @@ The Vitest harness already exists from the login sprint. Do not reinstall it.
 
 ---
 
-### Phase 4: Question APIs - PLANNED
+### Phase 4: Question APIs - COMPLETED
 
 **Objective**: HTTP endpoints can list, create, read, update, delete, and preview questions.
 
@@ -516,6 +516,15 @@ The Vitest harness already exists from the login sprint. Do not reinstall it.
 - `src/app/api/questions/[id]/route.test.ts` (written first)
 - `src/app/api/questions/[id]/preview/route.ts`
 - `src/app/api/questions/[id]/preview/route.test.ts` (written first)
+
+**Implementation notes**:
+
+- Tests were written first and failed red (`Failed to resolve import "@/app/api/questions/route"` and the `[id]` / preview routes)
+- `GET`/`POST /api/questions` list and create (`src/app/api/questions/route.ts:44`)
+- `GET`/`PUT`/`DELETE /api/questions/[id]` read, replace, and delete (`src/app/api/questions/[id]/route.ts:55`)
+- Preview strips `isCorrect` from every choice (`src/app/api/questions/[id]/preview/route.ts:20`)
+- No handler sets cookies
+- `npm test`: 87 passed; `npm run lint`: exit 0; `npm run build`: succeeded
 
 ---
 
@@ -654,9 +663,9 @@ Planned paths (create during the matching phase; do not create them only to sati
 - `src/lib/services/question.test.ts` — written first (`src/lib/services/question.test.ts:226`)
 - `src/lib/services/attempt.ts` — attempt persistence (`src/lib/services/attempt.ts:111`)
 - `src/lib/services/attempt.test.ts` — written first (`src/lib/services/attempt.test.ts:214`)
-- `src/app/api/questions/route.ts` — list and create
-- `src/app/api/questions/[id]/route.ts` — get, update, delete
-- `src/app/api/questions/[id]/preview/route.ts` — preview without `isCorrect`
+- `src/app/api/questions/route.ts` — list and create (`src/app/api/questions/route.ts:44`)
+- `src/app/api/questions/[id]/route.ts` — get, update, delete (`src/app/api/questions/[id]/route.ts:55`)
+- `src/app/api/questions/[id]/preview/route.ts` — preview without `isCorrect` (`src/app/api/questions/[id]/preview/route.ts:20`)
 - `src/app/api/attempts/route.ts` — create and list attempts
 - Colocated `*.test.ts` for each route
 - `src/components/questions/question-table.tsx` — test-bank table and kebab menu
@@ -866,6 +875,6 @@ Add entries here when bugs are found and fixed during implementation.
 ## Current Status
 
 **Last Updated**: 2026-09-04
-**Current Phase**: Phase 3 - Attempt service
+**Current Phase**: Phase 4 - Question APIs
 **Status**: COMPLETED (awaiting review)
-**Next Steps**: After review, commit/push/deploy Phase 3, then Phase 4 — question APIs.
+**Next Steps**: After review, commit/push/deploy Phase 4, then Phase 5 — attempt APIs.

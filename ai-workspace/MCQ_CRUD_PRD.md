@@ -528,7 +528,7 @@ The Vitest harness already exists from the login sprint. Do not reinstall it.
 
 ---
 
-### Phase 5: Attempt APIs - PLANNED
+### Phase 5: Attempt APIs - COMPLETED
 
 **Objective**: HTTP endpoints can record an attempt and list attempts for a question.
 
@@ -553,6 +553,14 @@ The Vitest harness already exists from the login sprint. Do not reinstall it.
 
 - `src/app/api/attempts/route.ts`
 - `src/app/api/attempts/route.test.ts` (written first)
+
+**Implementation notes**:
+
+- Tests were written first (`src/app/api/attempts/route.test.ts`)
+- `POST /api/attempts` records the attempt and returns the correct/incorrect message from the stored choice (`src/app/api/attempts/route.ts:50`)
+- `GET /api/attempts?questionId=` lists attempts for that question; missing `questionId` is 400 (`src/app/api/attempts/route.ts:36`)
+- Unknown question or choice maps to 404; a choice on the wrong question maps to 400
+- `npm test`: 96 passed; `npm run lint`: exit 0; `npm run build`: succeeded
 
 ---
 
@@ -666,7 +674,7 @@ Planned paths (create during the matching phase; do not create them only to sati
 - `src/app/api/questions/route.ts` — list and create (`src/app/api/questions/route.ts:44`)
 - `src/app/api/questions/[id]/route.ts` — get, update, delete (`src/app/api/questions/[id]/route.ts:55`)
 - `src/app/api/questions/[id]/preview/route.ts` — preview without `isCorrect` (`src/app/api/questions/[id]/preview/route.ts:20`)
-- `src/app/api/attempts/route.ts` — create and list attempts
+- `src/app/api/attempts/route.ts` — create and list attempts (`src/app/api/attempts/route.ts:50`)
 - Colocated `*.test.ts` for each route
 - `src/components/questions/question-table.tsx` — test-bank table and kebab menu
 - `src/components/questions/question-form.tsx` — create/edit form
@@ -875,6 +883,6 @@ Add entries here when bugs are found and fixed during implementation.
 ## Current Status
 
 **Last Updated**: 2026-09-04
-**Current Phase**: Phase 4 - Question APIs
+**Current Phase**: Phase 5 - Attempt APIs
 **Status**: COMPLETED (awaiting review)
-**Next Steps**: After review, commit/push/deploy Phase 4, then Phase 5 — attempt APIs.
+**Next Steps**: After review, commit/push/deploy Phase 5, then Phase 6 — test bank table UI.

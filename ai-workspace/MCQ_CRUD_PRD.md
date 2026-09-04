@@ -648,7 +648,7 @@ The Vitest harness already exists from the login sprint. Do not reinstall it.
 
 ---
 
-### Phase 8: Preview and attempt feedback - PLANNED
+### Phase 8: Preview and attempt feedback - COMPLETED
 
 **Objective**: A teacher can open a question, pick a choice, submit, and see a correct or incorrect message.
 
@@ -676,6 +676,15 @@ The Vitest harness already exists from the login sprint. Do not reinstall it.
 - `src/components/questions/question-preview.tsx`
 - Colocated `*.test.tsx` written first
 
+**Implementation notes**:
+
+- Tests were written first and failed red (missing `@/app/test-bank/questions/[id]/preview/page`)
+- Preview loads `GET /api/questions/[id]/preview` and strips any `isCorrect` before render (`src/components/questions/question-preview.tsx:55`)
+- Submit stays disabled until a choice is selected, then `POST /api/attempts` with `questionId` and `choiceId` (`src/components/questions/question-preview.tsx:84`)
+- Feedback uses the API message: `"Correct. That is the right answer."` / `"Incorrect. That is not the right answer."`
+- Unknown id shows `"Question not found."`; **Back to test bank** returns to `/test-bank`
+- `npm test`: 123 passed; `npm run lint`: exit 0; `npm run build`: succeeded (`/test-bank/questions/[id]/preview`)
+
 ---
 
 ## Technical Implementation Details
@@ -696,7 +705,7 @@ Planned paths (create during the matching phase; do not create them only to sati
 - Colocated `*.test.ts` for each route
 - `src/components/questions/question-table.tsx` — test-bank table and kebab menu (`src/components/questions/question-table.tsx:37`)
 - `src/components/questions/question-form.tsx` — create/edit form (`src/components/questions/question-form.tsx:132`)
-- `src/components/questions/question-preview.tsx` — preview and feedback
+- `src/components/questions/question-preview.tsx` — preview and feedback (`src/components/questions/question-preview.tsx:84`)
 - `src/app/test-bank/page.tsx` — list page
 - `src/app/test-bank/questions/new/page.tsx` — create route
 - `src/app/test-bank/questions/[id]/edit/page.tsx` — edit route
@@ -901,6 +910,6 @@ Add entries here when bugs are found and fixed during implementation.
 ## Current Status
 
 **Last Updated**: 2026-09-04
-**Current Phase**: Phase 7 - Create and edit page
+**Current Phase**: Phase 8 - Preview and attempt feedback
 **Status**: COMPLETED (awaiting review)
-**Next Steps**: After review, commit/push/deploy Phase 7, then Phase 8 — preview and attempt feedback.
+**Next Steps**: After review, commit/push/deploy Phase 8. Then mark remaining acceptance criteria after the browser pass.

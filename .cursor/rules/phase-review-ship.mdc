@@ -1,0 +1,41 @@
+---
+description: After each PRD phase, wait for user review, then commit, push, and deploy to Cloudflare
+alwaysApply: true
+---
+
+# Phase review, then commit, push, and deploy
+
+This is a standing instruction. After the user reviews and approves a phase, commit,
+push, and deploy without asking again. Do **not** do those steps at the end of
+implementation.
+
+## After implementing a phase
+
+1. Finish verification (`npm run lint`, `npm run build`, and tests that belong to the phase).
+2. Summarize what changed and that the phase is ready for review.
+3. **Stop.** Do not commit, push, or run `npm run deploy`.
+
+If the user requests changes, implement them, re-verify, and wait for review again.
+
+## After the user reviews and approves
+
+Treat phrases such as "looks good", "approved", "reviewed", "ship it", or
+"commit and push" as approval of the current phase. Then, in order:
+
+1. **Commit** on the current branch using the git safety protocol: `git status`,
+   `git diff`, and `git log` first. Stage only the phase files (no secrets, no
+   `.dev.vars`, no generated files such as `cloudflare-env.d.ts`). Write a concise
+   commit message focused on why the phase exists. Do not amend, force-push, or
+   skip hooks.
+2. **Push** the current branch with `git push -u origin HEAD` if it has no upstream,
+   otherwise `git push`. Never force-push.
+3. **Deploy** with `npm run deploy` from a local session. Report the Worker URL or
+   the exact deploy error.
+
+This approval is the explicit deploy request. Do not deploy after implementation
+alone. Do not apply remote D1 migrations as part of this ship step.
+
+## Cloud agents
+
+Cursor Cloud has no Cloudflare credentials. Commit and push if git remotes work.
+Skip `npm run deploy` and tell the user to run it locally.
